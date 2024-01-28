@@ -1,46 +1,65 @@
 function Gameboard() {
-    let gameboard = [];
+    
+    let board = ['','','','','','','','',''];
+    
+    function dropToken(number, marker) {
+        if (board[number] !== '') {
+            console.log('This cell is taken. Choose another!'); 
+            
+        } else {
+            board[number] = marker;
+            console.log(`${marker} was played on Cell ${number}`) ;
+        };
+    };
 
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            gameboard.push('');
-            gameboard[i]
-        }
-    }
+    function randomNumber(min, max) {
+        return Math.floor(Math.random()* (max - min) + min);
+    };
 
-    return {gameboard};
+    function computerMove () {
+        let computerChoice = randomNumber(1, 10);
+        dropToken(computerChoice, 'O');
+        console.log(board);
+        console.log('Your turn!')
+    };
+    
+    return {board, dropToken, computerMove}
 };
 
-console.log(Gameboard())
 
 
 function Players() {
-    let playerList = [];
+    let humanPlayer;
+    let computerPlayer = '@AI';
 
-    const createPlayer = (name) => {
-        const playerName = name;
-        let playerMarker;
-        playerList.push(name)
+    let humanMarker = 'X';
+    let computerMarker = 'O';
 
-        if (playerList[0] == name) {
-            playerMarker = 'X';
-        } else if (playerList[1] == name) {
-            playerMarker = 'O';
-        } else {
-            alert('Two players are already in the game')
-        }
-        return {playerName, playerMarker,}
+    function createPlayer(name) {
+        humanPlayer = '@' + name;
+        return humanPlayer;
     };
-    
-    return {createPlayer}
-};
 
+    return {createPlayer,
+            humanPlayer, 
+            computerPlayer,
+            humanMarker, 
+            computerMarker,}
+};
 
 
 
 function Game() {
-   
-};
+    let board = Gameboard();
 
+    function playRound () {
+        let playerChoice = prompt('Choose a cell', '');
+        board.dropToken(playerChoice * 1, 'X');
+        board.computerMove();
+
+    }
+    
+    return {playRound,}
+};
 
 
