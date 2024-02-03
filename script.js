@@ -2,24 +2,47 @@ function Gameboard() {
     let players = Players();
     let board = ['','','','','','','','',''];
     
-    function dropToken(number, marker) {
-        if (board[number] !== '') {
-            console.log('This cell is taken. Choose another!'); 
-            
+    //function to drop player's token
+    function dropPlayerToken(index) {
+        if (board[index] !== '') {
+            return 'Cell is taken! Retry!'; 
         } else {
-            board[number] = marker;
-            console.log(`${marker} was played on Cell ${number}`) ;
+            board[index] = 'X';
         };
     };
 
-    function randomNumber(min, max) {
+    function randomIndex(min, max) {
         return Math.floor(Math.random()* (max - min) + min);
     };
 
+    
+    function checkFreeIndexes () {
+        let freeIndexes = [];
+        //since we run checkFreeIndexes before computerMove, the length of the free index array is one less than the actual number of free indexes. To adjust for that, the loop must be one less than the length of the board.
+        for (i = 0; i < 8; i++) {
+            if (board[i] == '') {
+                freeIndexes.push(board[i]);
+            };
+        };
+        if (freeIndexes.length == 0) {
+            return true;
+        } else {
+            return false;
+        };
+    };
+
+    function dropCompToken (index) {
+        if (board[index] !== ''){
+            computerMove();
+        } else {
+            board[index] = 'O';
+        };
+    };
+
     function computerMove () {
-        let computerChoice = randomNumber(1, 10);
-        dropToken(computerChoice, 'O');
-        console.log('Your turn!');
+        let computerChoice = randomIndex(1, 9);
+        dropCompToken(computerChoice);
+        
     };
 
     //function to check if all array indexes are full. If they are then, it's a tie
@@ -33,9 +56,9 @@ function Gameboard() {
         };
 
         if (fullBoard.length == 9) {
-            return 1;
+            return true;
         } else {
-            return 0; 
+            return false; 
         };
     };
 
@@ -94,20 +117,21 @@ function Gameboard() {
     //function to check for ties
     function checkTies () {
         checkIfFull();
-        if (checkIfFull == 1) {
+        if (checkIfFull) {
             return 'A tie!'
         } else {
             return 'Continue playing!'
-        }
-    }
-    return {board, dropToken, computerMove, checkWins, checkIfFull, checkTies,}
+        };
+    };
+    return {board, dropPlayerToken, dropCompToken, computerMove, checkWins, checkIfFull, checkTies, checkFreeIndexes,}
 };
+Gameboard();
 
 
 
 function Players() {
-    let humanPlayer;
     let computerPlayer = '@AI';
+    let humanPlayer;
 
     let humanMarker = 'X';
     let computerMarker = 'O';
@@ -119,21 +143,57 @@ function Players() {
 
     return {createPlayer, humanPlayer, computerPlayer, humanMarker,computerMarker,}
 };
-
+Players();
 
 
 function Game() {
-    let board = Gameboard();
+    // let board = Gameboard();
 
-    function playRound () {
-        let playerChoice = prompt('Choose a cell', '');
-        board.dropToken(playerChoice * 1, 'X');
-        board.computerMove();
+    function playRound (board,index) {
+        // board.checkFreeIndexes();
+        board.dropPlayerToken(index);
         board.checkWins();
         board.checkTies();
-    }
+        if (board.checkFreeIndexes() == 1) {
+            return;
+        } else {
+            board.computerMove();
+            // board.checkWins();
+            board.checkTies();
+        }
+        
+    };
     
     return {playRound,}
 };
+Game();
 
 
+//Object for DOM related stuff
+function Display() {
+    let gameboard = Gameboard();
+    let gameD = Game();
+    const container = document.querySelector('div');
+
+   function renderBoard () {
+        for (let index in gameboard.board) {
+            const cell = document.createElement('div');
+            cell.classList.add(`cell`);
+            cell.textContent = gameboard.board[index];
+
+            cell.addEventListener('click', () => {
+                gameD.playRound(gameboard, index);
+                
+                container.textContent = '';
+                renderBoard();
+                
+            });
+            
+            container.appendChild(cell);
+        };
+   };
+   renderBoard();
+    
+    return {renderBoard,}
+};
+Display();
