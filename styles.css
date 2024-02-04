@@ -5,8 +5,10 @@
 body {
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 90px;
 }
 
 .cell {
@@ -21,4 +23,11 @@ body {
     display: flex;
     width: 150px;
     flex-wrap: wrap;
+}
+
+button {
+    width: 150px;
+    height: 50px;
+    border: none;
+    border-radius: 20px;
 }

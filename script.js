@@ -184,7 +184,7 @@ function Display() {
     let gameboard = Gameboard();
     let gameD = Game();
 
-    const container = document.querySelector('div');
+    const container = document.querySelector('.grid-container');
 
    function renderBoard () {
         for (let index in gameboard.board) {
