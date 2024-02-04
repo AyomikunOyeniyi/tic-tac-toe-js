@@ -15,6 +15,12 @@ function Gameboard() {
         return Math.floor(Math.random()* (max - min) + min);
     };
 
+    function clear () {
+        for (i = 0; i < board.length; i++) {
+            board[i] = '';
+        };
+        results.textContent = '';
+    };
     
     function checkFreeIndexes () {
         let freeIndexes = [];
@@ -32,7 +38,9 @@ function Gameboard() {
     };
 
     function dropCompToken (index) {
-        if (board[index] !== ''){
+        if (checkFreeIndexes()) {
+            return;
+        } else if (board[index] !== ''){
             computerMove();
         } else {
             board[index] = 'O';
@@ -62,106 +70,108 @@ function Gameboard() {
         };
     };
 
+    const resultP = document.createElement('p');
+    const results = document.querySelector('.results');
+
     //function to check win conditions
     function checkWins () {
         if (board[0] == 'X' && board[1] == 'X' && board[2] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[3] == 'X' && board[4] == 'X' && board[5] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[6] == 'X' && board[7] == 'X' && board[8] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[0] =='X' && board[3] == 'X' && board[6] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[1] == 'X' && board[4] == 'X' && board[7] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
 
         } else if (board[2] == 'X' && board[5] == 'X' && board[8] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[0] == 'X' && board[4] == 'X' && board[8] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[2] == 'X' && board[4] == 'X' && board[6] == 'X') {
-            console.log(`${players.humanPlayer} wins!`);
+            resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[0] == 'O' && board[1] == 'O' && board[2] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[3] == 'O' && board[4] == 'O' && board[5] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[6] == 'O' && board[7] == 'O' && board[8] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[0] =='O' && board[3] == 'O' && board[6] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[1] == 'O' && board[4] == 'O' && board[7] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[2] == 'O' && board[5] == 'O' && board[8] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[0] == 'O' && board[4] == 'O' && board[8] == 'O') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[2] == 'X' && board[4] == 'X' && board[6] == 'X') {
-            console.log(`${players.computerPlayer} wins!`);
+            resultP.textContent = `${players.computerPlayer} wins!`;
+            results.appendChild(resultP);
         } 
     };
 
     //function to check for ties
     function checkTies () {
         checkIfFull();
-        if (checkIfFull) {
-            return 'A tie!'
-        } else {
-            return 'Continue playing!'
+        if (checkIfFull() && !checkWins()) {
+            resultP.textContent = 'A tie!';
+            results.appendChild(resultP)
         };
     };
-    return {board, dropPlayerToken, dropCompToken, computerMove, checkWins, checkIfFull, checkTies, checkFreeIndexes,}
+    return {board, dropPlayerToken, dropCompToken, computerMove, checkWins, checkIfFull, checkTies, checkFreeIndexes, clear,}
 };
 Gameboard();
 
 
 
 function Players() {
-    let computerPlayer = '@AI';
-    let humanPlayer;
+    let computerPlayer = 'Player O';
+    let humanPlayer = 'Player X';
 
     let humanMarker = 'X';
     let computerMarker = 'O';
 
-    function createPlayer(name) {
-        humanPlayer = '@' + name;
-        return humanPlayer;
-    };
-
-    return {createPlayer, humanPlayer, computerPlayer, humanMarker,computerMarker,}
+    return {humanPlayer, computerPlayer, humanMarker,computerMarker,}
 };
 Players();
 
 
 function Game() {
-    // let board = Gameboard();
-
     function playRound (board,index) {
-        // board.checkFreeIndexes();
         board.dropPlayerToken(index);
+        board.computerMove();
         board.checkWins();
         board.checkTies();
-        if (board.checkFreeIndexes() == 1) {
-            return;
-        } else {
-            board.computerMove();
-            // board.checkWins();
-            board.checkTies();
-        }
-        
     };
     
     return {playRound,}
@@ -173,6 +183,7 @@ Game();
 function Display() {
     let gameboard = Gameboard();
     let gameD = Game();
+
     const container = document.querySelector('div');
 
    function renderBoard () {
@@ -183,17 +194,22 @@ function Display() {
 
             cell.addEventListener('click', () => {
                 gameD.playRound(gameboard, index);
-                
                 container.textContent = '';
                 renderBoard();
-                
             });
-            
             container.appendChild(cell);
         };
    };
    renderBoard();
-    
+
+   const resetBtn = document.querySelector('button');
+   resetBtn.addEventListener('click', () => {
+        gameboard.clear();
+        container.textContent = '';
+        renderBoard();
+   });
+
+
     return {renderBoard,}
 };
 Display();
