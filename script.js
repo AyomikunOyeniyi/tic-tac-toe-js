@@ -93,6 +93,7 @@ function Gameboard() {
 
         } else if (board[1] == 'X' && board[4] == 'X' && board[7] == 'X') {
             resultP.textContent = `${players.humanPlayer} wins!`;
+            results.appendChild(resultP);
 
         } else if (board[2] == 'X' && board[5] == 'X' && board[8] == 'X') {
             resultP.textContent = `${players.humanPlayer} wins!`;
